@@ -1,14 +1,14 @@
 {
   "files": {
     "main.css": "/kiritoru/static/css/main.5ba81a30.chunk.css",
-    "main.js": "/kiritoru/static/js/main.ec62c484.chunk.js",
-    "main.js.map": "/kiritoru/static/js/main.ec62c484.chunk.js.map",
+    "main.js": "/kiritoru/static/js/main.38ced5c4.chunk.js",
+    "main.js.map": "/kiritoru/static/js/main.38ced5c4.chunk.js.map",
     "runtime-main.js": "/kiritoru/static/js/runtime-main.5bd8d834.js",
     "runtime-main.js.map": "/kiritoru/static/js/runtime-main.5bd8d834.js.map",
     "static/js/2.bd81354c.chunk.js": "/kiritoru/static/js/2.bd81354c.chunk.js",
     "static/js/2.bd81354c.chunk.js.map": "/kiritoru/static/js/2.bd81354c.chunk.js.map",
     "index.html": "/kiritoru/index.html",
-    "precache-manifest.57c5a86e396bb85a59e67ae5d66eea8f.js": "/kiritoru/precache-manifest.57c5a86e396bb85a59e67ae5d66eea8f.js",
+    "precache-manifest.d337ecc2cc989523e2eed48ccdd39446.js": "/kiritoru/precache-manifest.d337ecc2cc989523e2eed48ccdd39446.js",
     "service-worker.js": "/kiritoru/service-worker.js",
     "static/css/main.5ba81a30.chunk.css.map": "/kiritoru/static/css/main.5ba81a30.chunk.css.map"
   },
@@ -16,6 +16,6 @@
     "static/js/runtime-main.5bd8d834.js",
     "static/js/2.bd81354c.chunk.js",
     "static/css/main.5ba81a30.chunk.css",
-    "static/js/main.ec62c484.chunk.js"
+    "static/js/main.38ced5c4.chunk.js"
   ]
 }

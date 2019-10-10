@@ -1,10 +1,10 @@
 self.__precacheManifest = (self.__precacheManifest || []).concat([
   {
-    "revision": "c8cceadc7efe2284969948b6c162774a",
+    "revision": "71cf3d8f828b9b15f3c8eecc0c0be8b7",
     "url": "/kiritoru/index.html"
   },
   {
-    "revision": "d549474aee1cc93a0f55",
+    "revision": "1fb5769132af1004c469",
     "url": "/kiritoru/static/css/main.5ba81a30.chunk.css"
   },
   {
@@ -12,8 +12,8 @@ self.__precacheManifest = (self.__precacheManifest || []).concat([
     "url": "/kiritoru/static/js/2.bd81354c.chunk.js"
   },
   {
-    "revision": "d549474aee1cc93a0f55",
-    "url": "/kiritoru/static/js/main.ec62c484.chunk.js"
+    "revision": "1fb5769132af1004c469",
+    "url": "/kiritoru/static/js/main.38ced5c4.chunk.js"
   },
   {
     "revision": "87e0cbaa52f1d9f1408c",
