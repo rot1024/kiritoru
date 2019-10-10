@@ -23,6 +23,7 @@
     "react-hot-loader": "^4.12.15",
     "react-hotkeys-hook": "^1.5.3",
     "react-scripts": "3.2.0",
+    "react-use": "^12.3.0",
     "typescript": "3.6.3",
     "use-file-input": "^1.0.0"
   },
