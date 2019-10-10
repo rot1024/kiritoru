@@ -10,6 +10,7 @@ import useFileInput from "use-file-input";
 import { useHotkeys } from "react-hotkeys-hook";
 import { saveAs } from "file-saver";
 import sengaka from "./sengaka";
+import { useLocalStorage } from "react-use";
 
 const toBlob = (
   canvas: HTMLCanvasElement,
@@ -25,8 +26,10 @@ const App: React.FC = () => {
   const fileName = useRef("");
   const canvas = useMemo(() => document.createElement("canvas"), []);
   const playing = useRef(false);
-  const [jpg, setJpg] = useState(false);
-  const [senga, setSenga] = useState(false);
+  const [config, setConfig] = useLocalStorage("kiritoru_config", {
+    jpg: false,
+    senga: false
+  });
   const [src, setSrc] = useState<string>();
   const handleInput = useFileInput(files => {
     playing.current = false;
@@ -67,17 +70,25 @@ const App: React.FC = () => {
       ref.current.currentTime * 24
     )}`;
 
-    const blob = await toBlob(canvas, jpg ? "image/jpeg" : "image/png", 1);
+    const blob = await toBlob(
+      canvas,
+      config.jpg ? "image/jpeg" : "image/png",
+      1
+    );
     if (!blob || !ref.current) return;
-    saveAs(blob, `${filename}.${jpg ? "jpg" : "png"}`);
+    saveAs(blob, `${filename}.${config.jpg ? "jpg" : "png"}`);
 
-    if (senga) {
+    if (config.senga) {
       sengaka(canvas);
-      const blob = await toBlob(canvas, jpg ? "image/jpeg" : "image/png", 1);
+      const blob = await toBlob(
+        canvas,
+        config.jpg ? "image/jpeg" : "image/png",
+        1
+      );
       if (!blob || !ref.current) return;
-      saveAs(blob, `${filename}_senga.${jpg ? "jpg" : "png"}`);
+      saveAs(blob, `${filename}_senga.${config.jpg ? "jpg" : "png"}`);
     }
-  }, [canvas, jpg, senga, src]);
+  }, [canvas, config.jpg, config.senga, src]);
 
   useHotkeys("space", toggle, [toggle]);
   useHotkeys("o", handleInput, [handleInput]);
@@ -89,14 +100,14 @@ const App: React.FC = () => {
   useHotkeys(
     "t",
     () => {
-      setJpg(j => !j);
+      setConfig(j => ({ ...j, jpg: !j.jpg }));
     },
     []
   );
   useHotkeys(
     "s",
     () => {
-      setSenga(j => !j);
+      setConfig(j => ({ ...j, senga: !j.senga }));
     },
     []
   );
@@ -109,7 +120,7 @@ const App: React.FC = () => {
       setShowType(false);
     }, 1000);
     return () => window.clearTimeout(timeout);
-  }, [jpg]);
+  }, [config.jpg]);
   const [showSenga, setShowSenga] = useState(false);
   useEffect(() => {
     setShowType(false);
@@ -118,7 +129,7 @@ const App: React.FC = () => {
       setShowSenga(false);
     }, 1000);
     return () => window.clearTimeout(timeout);
-  }, [senga]);
+  }, [config.senga]);
 
   return (
     <>
@@ -153,7 +164,13 @@ const App: React.FC = () => {
           opacity: showType || showSenga ? "1" : "0"
         }}
       >
-        {showSenga ? (senga ? "線画保存" : "線画無し") : jpg ? "JPG" : "PNG"}
+        {showSenga
+          ? config.senga
+            ? "線画保存"
+            : "線画無し"
+          : config.jpg
+          ? "JPG"
+          : "PNG"}
       </div>
     </>
   );
