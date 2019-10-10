@@ -9,6 +9,16 @@ import { hot } from "react-hot-loader/root";
 import useFileInput from "use-file-input";
 import { useHotkeys } from "react-hotkeys-hook";
 import { saveAs } from "file-saver";
+import sengaka from "./sengaka";
+
+const toBlob = (
+  canvas: HTMLCanvasElement,
+  type?: string | undefined,
+  quality?: any
+) =>
+  new Promise<Blob | null>(resolve => {
+    canvas.toBlob(resolve, type, quality);
+  });
 
 const App: React.FC = () => {
   const ref = useRef<HTMLVideoElement>(null);
@@ -16,6 +26,7 @@ const App: React.FC = () => {
   const canvas = useMemo(() => document.createElement("canvas"), []);
   const playing = useRef(false);
   const [jpg, setJpg] = useState(false);
+  const [senga, setSenga] = useState(false);
   const [src, setSrc] = useState<string>();
   const handleInput = useFileInput(files => {
     playing.current = false;
@@ -44,27 +55,29 @@ const App: React.FC = () => {
   const prevFrame = useCallback(() => seekFrame(false), [seekFrame]);
   const nextSecond = useCallback(() => seekRelative(1), [seekRelative]);
   const prevSecond = useCallback(() => seekRelative(-1), [seekRelative]);
-  const handleCapture = useCallback(() => {
+  const handleCapture = useCallback(async () => {
     if (!ref.current || !src) return;
     const ctx = canvas.getContext("2d");
     if (!ctx) return;
     canvas.width = ref.current.videoWidth;
     canvas.height = ref.current.videoHeight;
     ctx.drawImage(ref.current, 0, 0);
-    canvas.toBlob(
-      blob => {
-        if (!blob || !ref.current) return;
-        saveAs(
-          blob,
-          `${fileName.current}_${Math.floor(ref.current.currentTime * 24)}.${
-            jpg ? "jpg" : "png"
-          }`
-        );
-      },
-      jpg ? "image/jpeg" : "image/png",
-      1
-    );
-  }, [canvas, jpg, src]);
+
+    const filename = `${fileName.current}_${Math.floor(
+      ref.current.currentTime * 24
+    )}`;
+
+    const blob = await toBlob(canvas, jpg ? "image/jpeg" : "image/png", 1);
+    if (!blob || !ref.current) return;
+    saveAs(blob, `${filename}.${jpg ? "jpg" : "png"}`);
+
+    if (senga) {
+      sengaka(canvas);
+      const blob = await toBlob(canvas, jpg ? "image/jpeg" : "image/png", 1);
+      if (!blob || !ref.current) return;
+      saveAs(blob, `${filename}_senga.${jpg ? "jpg" : "png"}`);
+    }
+  }, [canvas, jpg, senga, src]);
 
   useHotkeys("space", toggle, [toggle]);
   useHotkeys("o", handleInput, [handleInput]);
@@ -72,7 +85,7 @@ const App: React.FC = () => {
   useHotkeys("right", nextFrame, [nextFrame]);
   useHotkeys("shift+left", prevSecond, [prevSecond]);
   useHotkeys("shift+right", nextSecond, [nextSecond]);
-  useHotkeys("s", handleCapture, [handleCapture]);
+  useHotkeys("c", handleCapture, [handleCapture]);
   useHotkeys(
     "t",
     () => {
@@ -80,15 +93,32 @@ const App: React.FC = () => {
     },
     []
   );
+  useHotkeys(
+    "s",
+    () => {
+      setSenga(j => !j);
+    },
+    []
+  );
 
   const [showType, setShowType] = useState(false);
   useEffect(() => {
     setShowType(true);
+    setShowSenga(false);
     const timeout = window.setTimeout(() => {
       setShowType(false);
     }, 1000);
     return () => window.clearTimeout(timeout);
   }, [jpg]);
+  const [showSenga, setShowSenga] = useState(false);
+  useEffect(() => {
+    setShowType(false);
+    setShowSenga(true);
+    const timeout = window.setTimeout(() => {
+      setShowSenga(false);
+    }, 1000);
+    return () => window.clearTimeout(timeout);
+  }, [senga]);
 
   return (
     <>
@@ -120,11 +150,10 @@ const App: React.FC = () => {
           background: "rgba(0, 0, 0, 0.5)",
           pointerEvents: "none",
           padding: "0px 10px",
-          transition: "opacity 0.2s ease",
-          opacity: showType ? "1" : "0"
+          opacity: showType || showSenga ? "1" : "0"
         }}
       >
-        {jpg ? "JPG" : "PNG"}
+        {showSenga ? (senga ? "線画保存" : "線画無し") : jpg ? "JPG" : "PNG"}
       </div>
     </>
   );
