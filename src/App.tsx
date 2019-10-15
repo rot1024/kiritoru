@@ -58,8 +58,14 @@ const App: React.FC = () => {
     if (!ref.current) return;
     ref.current.currentTime = ref.current.currentTime + seconds;
   }, []);
-  const nextFrame = useCallback(() => seekFrame(true), [seekFrame]);
-  const prevFrame = useCallback(() => seekFrame(false), [seekFrame]);
+  const nextFrame = useCallback(() => {
+    if (playing.current) return;
+    return seekFrame(true);
+  }, [seekFrame]);
+  const prevFrame = useCallback(() => {
+    if (playing.current) return;
+    seekFrame(false);
+  }, [seekFrame]);
   const nextSecond = useCallback(() => seekRelative(1), [seekRelative]);
   const prevSecond = useCallback(() => seekRelative(-1), [seekRelative]);
   const handleCapture = useCallback(async () => {
