@@ -3,7 +3,7 @@ import glur from "glur";
 export default (
   canvas?: HTMLCanvasElement,
   sigma: number = 1.5,
-  shadow: number = 150
+  shadow: number = 200
 ) => {
   if (!canvas) return;
   const ctx = canvas.getContext("2d");

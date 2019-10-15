@@ -85,7 +85,7 @@ const App: React.FC = () => {
     const blob = await toBlob(
       canvas,
       config.jpg ? "image/jpeg" : "image/png",
-      1
+      0.5
     );
     if (!blob || !ref.current) return;
     saveAs(blob, `${filename}.${config.jpg ? "jpg" : "png"}`);
