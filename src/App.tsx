@@ -31,10 +31,14 @@ const App: React.FC = () => {
     senga: false
   });
   const [src, setSrc] = useState<string>();
-  const handleInput = useFileInput(files => {
+  const openVideo = useCallback((file?: File) => {
+    if (!file || file.type.indexOf("video/") !== 0) return;
     playing.current = false;
-    fileName.current = files[0].name.replace(/\..+$/, "");
-    setSrc(URL.createObjectURL(files[0]));
+    fileName.current = file.name.replace(/\..+$/, "");
+    setSrc(URL.createObjectURL(file));
+  }, []);
+  const handleInput = useFileInput(files => {
+    openVideo(files[0]);
   });
   const toggle = useCallback(() => {
     if (!ref.current) return;
@@ -113,6 +117,7 @@ const App: React.FC = () => {
   );
 
   const [showType, setShowType] = useState(false);
+
   useEffect(() => {
     setShowType(true);
     setShowSenga(false);
@@ -121,7 +126,9 @@ const App: React.FC = () => {
     }, 1000);
     return () => window.clearTimeout(timeout);
   }, [config.jpg]);
+
   const [showSenga, setShowSenga] = useState(false);
+
   useEffect(() => {
     setShowType(false);
     setShowSenga(true);
@@ -130,6 +137,18 @@ const App: React.FC = () => {
     }, 1000);
     return () => window.clearTimeout(timeout);
   }, [config.senga]);
+
+  const handleDrop = useCallback(
+    (e: React.DragEvent<HTMLElement>) => {
+      e.preventDefault();
+      openVideo(e.dataTransfer.files[0]);
+    },
+    [openVideo]
+  );
+
+  const preventEvent = useCallback((e: React.SyntheticEvent) => {
+    e.preventDefault();
+  }, []);
 
   return (
     <>
@@ -150,6 +169,8 @@ const App: React.FC = () => {
           background: "#000",
           objectFit: "contain"
         }}
+        onDragOver={preventEvent}
+        onDrop={handleDrop}
       />
       <div
         style={{
