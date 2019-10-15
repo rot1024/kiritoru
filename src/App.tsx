@@ -68,6 +68,8 @@ const App: React.FC = () => {
   }, [seekFrame]);
   const nextSecond = useCallback(() => seekRelative(1), [seekRelative]);
   const prevSecond = useCallback(() => seekRelative(-1), [seekRelative]);
+  const nextSecond10 = useCallback(() => seekRelative(10), [seekRelative]);
+  const prevSecond10 = useCallback(() => seekRelative(-10), [seekRelative]);
   const handleCapture = useCallback(async () => {
     if (!ref.current || !src) return;
     const ctx = canvas.getContext("2d");
@@ -106,6 +108,8 @@ const App: React.FC = () => {
   useHotkeys("right", nextFrame, [nextFrame]);
   useHotkeys("shift+left", prevSecond, [prevSecond]);
   useHotkeys("shift+right", nextSecond, [nextSecond]);
+  useHotkeys("alt+left", prevSecond10, [prevSecond10]);
+  useHotkeys("alt+right", nextSecond10, [nextSecond10]);
   useHotkeys("c", handleCapture, [handleCapture]);
   useHotkeys(
     "t",
